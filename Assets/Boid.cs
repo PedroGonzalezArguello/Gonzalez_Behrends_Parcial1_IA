@@ -7,6 +7,7 @@ public class Boid : MonoBehaviour
 {
     [SerializeField] private float _speed;
     [SerializeField] private float _rotationSpeed;
+    [SerializeField] private LayerMask _foodMask;
 
     private Transform _target;
     private Transform _danger;
@@ -14,7 +15,7 @@ public class Boid : MonoBehaviour
     private Vector3 _fleeVector;
     private Vector3 _seekVector;
 
-    private float _overlapRadius = 10; 
+    [SerializeField] private float _overlapRadius = 10; 
 
     [Header("Weights")]
     [Range(0,1)] [SerializeField] private float _fleeWeight;
@@ -24,6 +25,7 @@ public class Boid : MonoBehaviour
     [Range(0,1)] [SerializeField] private float _allignWeight;
 
     private GameObject[] _closeBoids;
+    private GameObject[] _closeFood;
 
     private void Awake()
     {
@@ -46,16 +48,50 @@ public class Boid : MonoBehaviour
 
     private Vector3 CalculateDir()
     {
-        var dir = Separation().normalized * _separationWeight + Cohesion().normalized * _cohesionWeight + Allign().normalized * _allignWeight;
+        GetCloseFood();
+        var dir=Vector3.zero;
+        if (_closeFood.Length == 0)
+        {
+            print("imehere");
+            dir = Separation().normalized * _separationWeight + Cohesion().normalized * _cohesionWeight + Allign().normalized * _allignWeight;
+        }
+        else
+        {   
+            
+            dir = _closeFood[0].transform.position - transform.position;
+            if (dir.magnitude < 0.1f)
+            {
+                Destroy(_closeFood[0].gameObject);
+            }
+        }
         return dir;
     }
-
+    
     private GameObject[] GetCloseBoids()
     {
         _closeBoids = Physics.OverlapSphere(transform.position, _overlapRadius).Select(x => x.gameObject).ToArray();
 
-
         return _closeBoids;
+    }
+
+    private GameObject[] GetCloseFood()
+    {
+        
+        _closeFood = Physics.OverlapSphere(transform.position, _overlapRadius, _foodMask).Select(x => x.gameObject).ToArray();
+
+        print(_closeFood.Length);
+
+        return _closeFood;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        print("collide");
+        if (collision.gameObject.layer == _foodMask)
+        {
+            print("collide food");
+            Destroy(collision.gameObject);
+        }
     }
 
     public void Seek()
