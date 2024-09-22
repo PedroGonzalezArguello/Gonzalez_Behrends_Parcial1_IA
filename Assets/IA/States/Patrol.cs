@@ -12,17 +12,19 @@ public class Patrol : BaseState<EnemyIA.IAStates, EnemyIA>
 
     public override void OnUpdate()
     {
-        var target = Physics.OverlapSphere(_character.transform.position, 5, _flockMask);
+        var target = Physics.OverlapSphere(_character.transform.position, 5, _character.FlockMask);
 
-        if(target.Length > 0)
+        if (target.Length > 0)
         {
             var targetDir = (target[0].transform.position - _character.transform.position);
             if(Vector3.Angle(_character.transform.forward, targetDir) < _viewAngle / 2)
             {
-
+                _character.target = target[0].transform;
+                _fsm.ChangeState(EnemyIA.IAStates.CHASE);
+                return;
             }
         }
-
+        
         var actualDir = (_character.Waypoints[_wayCount].position - _character.transform.position);
         actualDir.y = 0;
 
@@ -38,9 +40,9 @@ public class Patrol : BaseState<EnemyIA.IAStates, EnemyIA>
             return;
         }
 
-        _character.transform.position += actualDir.normalized * Time.deltaTime * _character.Speed;
+        _character.Move(actualDir);
 
-        if(actualDir.magnitude < 0.2f)
+        if (actualDir.magnitude < 0.2f)
         {
             _wayCount++;
             if (_wayCount >= _character.Waypoints.Count) 

@@ -5,7 +5,6 @@ using UnityEngine;
 public abstract class BaseState<T, J> where J : MonoBehaviour
 {
     protected J _character;
-    protected LayerMask _flockMask;
     protected FSM<T, J> _fsm;
 
     public void SetUp(J chartacter, FSM<T, J> fsm)
