@@ -13,8 +13,7 @@ GameObject:
   - component: {fileID: 6191079571685592215}
   - component: {fileID: 332895379726703212}
   - component: {fileID: 1141939250221461018}
-  - component: {fileID: 1584630353183676630}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Boid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,28 +118,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9602635fc9b8ee64aad2f61b6ce76eaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 2
+  _speed: 5
   _rotationSpeed: 0.5
   _foodMask:
     serializedVersion: 2
     m_Bits: 64
-  _overlapRadius: 4
-  _fleeWeight: 0.64
-  _seekWeight: 0.582
-  _separationWeight: 0.439
-  _cohesionWeight: 0.651
-  _allignWeight: 0.259
---- !u!114 &1584630353183676630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7536246977449235458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c5e54b3578e0f2498fe4a2eaf6af356, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxX: 0
-  maxZ: 0
+  _dangerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  _overlapRadius: 2
+  _fleeWeight: 0.492
+  _seekWeight: 0.894
+  _separationWeight: 0.99
+  _cohesionWeight: 1
+  _allignWeight: 0.688
